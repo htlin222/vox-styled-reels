@@ -15,24 +15,27 @@ import { loadFont as vollkorn } from "@remotion/google-fonts/Vollkorn";
 import { loadFont as oldStandardTT } from "@remotion/google-fonts/OldStandardTT";
 import { loadFont as enriqueta } from "@remotion/google-fonts/Enriqueta";
 
+// Only the regular latin weight is needed — keeps font network requests low at render time.
+const opts = () => ({ weights: ["400" as const], subsets: ["latin" as const] });
+
 // Transitional-serif pool the answer cycles through — one is picked per detail
 // switch so the answer re-letters each time the progress advances.
 export const ANSWER_FONTS: string[] = [
-  libreBaskerville().fontFamily,
-  ptSerif().fontFamily,
-  lora().fontFamily,
-  sourceSerif4().fontFamily,
-  domine().fontFamily,
-  spectral().fontFamily,
-  gelasio().fontFamily,
-  tinos().fontFamily,
-  frankRuhlLibre().fontFamily,
-  notoSerif().fontFamily,
-  cardo().fontFamily,
-  crimsonText().fontFamily,
-  vollkorn().fontFamily,
-  oldStandardTT().fontFamily,
-  enriqueta().fontFamily,
+  libreBaskerville("normal", opts()).fontFamily,
+  ptSerif("normal", opts()).fontFamily,
+  lora("normal", opts()).fontFamily,
+  sourceSerif4("normal", opts()).fontFamily,
+  domine("normal", opts()).fontFamily,
+  spectral("normal", opts()).fontFamily,
+  gelasio("normal", opts()).fontFamily,
+  tinos("normal", opts()).fontFamily,
+  frankRuhlLibre("normal", opts()).fontFamily,
+  notoSerif("normal", opts()).fontFamily,
+  cardo("normal", opts()).fontFamily,
+  crimsonText("normal", opts()).fontFamily,
+  vollkorn("normal", opts()).fontFamily,
+  oldStandardTT("normal", opts()).fontFamily,
+  enriqueta("normal", opts()).fontFamily,
 ];
 
 // Pick a font for the given switch counter (number of details revealed so far).
