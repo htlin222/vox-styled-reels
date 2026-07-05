@@ -42,4 +42,7 @@ async function main() {
   console.log("SMOKE TEST PASSED");
 }
 
-main();
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

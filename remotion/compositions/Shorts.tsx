@@ -86,6 +86,11 @@ export function Shorts({ timing, topic, author }: { cardId: string; timing: Card
       </AbsoluteFill>
 
       <Audio src={staticFile(theme.sfx.begin)} />
+      {titleDone && (
+        <Sequence from={titlePhase.endFrame} durationInFrames={5}>
+          <Audio src={staticFile(theme.sfx.click)} />
+        </Sequence>
+      )}
       {detailPhases.map((p) => (
         <Sequence key={p.key} from={p.startFrame} durationInFrames={5}>
           <Audio src={staticFile(theme.sfx.click)} />

@@ -83,4 +83,7 @@ async function main() {
   cpSync(AUDIO_DIR, "public/audio", { recursive: true });
 }
 
-main();
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
