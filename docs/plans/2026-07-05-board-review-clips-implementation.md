@@ -1203,7 +1203,7 @@ import { baseZoom, pushBump } from "../lib/camera";
 import { buildTimeline } from "../lib/useCardTimeline";
 import type { CardTiming } from "../lib/types";
 
-export function LongForm({ timing, topic, author }: { timing: CardTiming; topic: string; author: string }) {
+export function LongForm({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { phases, totalFrames } = buildTimeline(timing);
@@ -1346,7 +1346,7 @@ import type { CardTiming } from "../lib/types";
 const SAFE_TOP = (1920 - theme.safeZone.shorts.h) / 2;
 const SAFE_LEFT = (1080 - theme.safeZone.shorts.w) / 2;
 
-export function Shorts({ timing, topic, author }: { timing: CardTiming; topic: string; author: string }) {
+export function Shorts({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { phases, totalFrames } = buildTimeline(timing);
