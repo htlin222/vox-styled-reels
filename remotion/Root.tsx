@@ -6,7 +6,11 @@ import { theme } from "./theme";
 import type { CardTiming } from "./lib/types";
 
 async function loadTiming(cardId: string): Promise<CardTiming> {
-  const response = await fetch(staticFile(`audio/${cardId}/timing.json`));
+  const path = `audio/${cardId}/timing.json`;
+  const response = await fetch(staticFile(path));
+  if (!response.ok) {
+    throw new Error(`Could not load ${path} (status ${response.status}). Did you run "pnpm audio" for card "${cardId}"?`);
+  }
   return response.json();
 }
 

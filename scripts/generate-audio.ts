@@ -1,5 +1,5 @@
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, cpSync } from "fs";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, cpSync, rmSync } from "fs";
 import { join } from "path";
 import { theme } from "../remotion/theme";
 import { parseWordTimings } from "../remotion/lib/timing";
@@ -78,6 +78,8 @@ async function main() {
     await processCard(join(CARDS_DIR, file));
   }
 
+  // Rebuild public/audio from scratch so renamed/removed cards don't leave stale served files behind.
+  rmSync("public/audio", { recursive: true, force: true });
   cpSync(AUDIO_DIR, "public/audio", { recursive: true });
 }
 

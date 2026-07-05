@@ -8,9 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@remotion/bundler':
+        specifier: ^4.0.484
+        version: 4.0.484(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@remotion/cli':
         specifier: ^4.0.484
         version: 4.0.484(postcss@8.5.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@remotion/renderer':
+        specifier: ^4.0.484
+        version: 4.0.484(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       msedge-tts:
         specifier: ^2.0.6
         version: 2.0.6
