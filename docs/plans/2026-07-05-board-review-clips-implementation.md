@@ -1727,3 +1727,9 @@ Expected: `SMOKE TEST PASSED`.
 **Step 3: Hand off**
 
 At this point the pipeline can take any `cards/*.json` and produce both video formats. Use `superpowers:finishing-a-development-branch` to decide how to merge `feature/implement-pipeline` back into `main`.
+
+---
+
+## Known limitations (accepted, not blocking v1)
+
+- **9:16 Shorts has no long-sentence auto-wrap/shrink guard.** `RollingCaption` renders each word chunk at a fixed `theme.fonts.bodySize` with no width measurement or font-shrink fallback. An unusually long word or a card whose sentences don't break evenly at the `maxWordsPerChunk` boundary could overflow the (now-narrowed, 900px-wide) safe zone. Not observed with the current fixture cards; accepted as a known gap for v1 rather than fixed now. Revisit if real content triggers visible overflow.
