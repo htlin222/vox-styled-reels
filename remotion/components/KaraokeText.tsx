@@ -13,6 +13,7 @@ export function KaraokeText({
   boil = false,
   fontFamily = theme.fonts.family,
   lineHeight = 1.4,
+  fontWeight,
 }: {
   words: WordTiming[];
   currentMs: number;
@@ -22,6 +23,7 @@ export function KaraokeText({
   boil?: boolean;
   fontFamily?: string;
   lineHeight?: number;
+  fontWeight?: number;
 }) {
   const active = activeWordIndex(words, currentMs);
 
@@ -30,7 +32,7 @@ export function KaraokeText({
       style={{
         fontFamily,
         fontSize,
-        fontWeight: bold ? theme.fonts.titleWeight : undefined,
+        fontWeight: fontWeight ?? (bold ? theme.fonts.titleWeight : undefined),
         color: theme.colors.ink,
         lineHeight,
         textAlign: "left",

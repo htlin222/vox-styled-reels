@@ -33,6 +33,10 @@ export const theme = {
     dotColorInactive: "rgba(17,17,17,0.18)",
   },
   transition: { scrollFrames: 8, scrollDistance: 60 },
+  // Title opening: the title plays its karaoke centered, oversized and heavier,
+  // then settles into its anchor (font-size tweens per frame so line breaks
+  // reflow naturally); only after it lands does the answer box fade in.
+  titleIntro: { sizeBoost: 1.8, startWeight: 900, settleMs: 700, boxFadeMs: 300 },
   opening: { settleFrames: 12, startScale: 1.05, maxBlur: 12 },
   // Gentle Vox-style flavor: an imperceptible whole-video push-in, a soft edge
   // vignette, a paper-cutout shadow under the answer box, and a paper texture

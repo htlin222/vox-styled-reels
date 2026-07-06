@@ -48,6 +48,15 @@ describe("buildTimeline", () => {
     expect(totalFrames).toBe(lastPhase.endFrame + endHoldFrames);
   });
 
+  it("holds after the title segment for the settle + box fade window", () => {
+    const timing = makeTiming([1000, 1000]);
+    timing.segments[0].key = "title";
+    const { phases } = buildTimeline(timing);
+    const gapFrames = Math.round((theme.timing.detailGapMs / 1000) * theme.fps);
+    const holdFrames = Math.round(((theme.titleIntro.settleMs + theme.titleIntro.boxFadeMs) / 1000) * theme.fps);
+    expect(phases[1].startFrame).toBe(theme.fps + gapFrames + holdFrames);
+  });
+
   it("returns no phases and just the end hold for a card with no segments", () => {
     const { phases, totalFrames } = buildTimeline(makeTiming([]));
     const endHoldFrames = Math.round(((theme.timing.endHoldMs + theme.timing.musicTailMs) / 1000) * theme.fps);

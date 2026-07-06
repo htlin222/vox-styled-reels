@@ -26,8 +26,8 @@ async function main() {
   const timing = JSON.parse(readFileSync(join("remotion/audio", CARD_ID, "timing.json"), "utf-8"));
   const expectedNarrationMs = timing.segments.reduce((sum: number, s: any) => sum + s.durationMs, 0);
 
-  for (const compositionId of ["LongForm", "Shorts"]) {
-    const path = join("out", `${CARD_ID}-${compositionId}.mp4`);
+  for (const outName of ["long.mp4", "short.mp4"]) {
+    const path = join("out", CARD_ID, outName);
     const stat = statSync(path);
     assert(stat.size > 0, `${path} is non-empty`);
 
@@ -35,8 +35,13 @@ async function main() {
     const durationMs = durationSeconds * 1000;
     assert(
       durationMs >= expectedNarrationMs,
-      `${compositionId} duration (${durationMs.toFixed(0)}ms) covers total narration (${expectedNarrationMs.toFixed(0)}ms)`
+      `${outName} duration (${durationMs.toFixed(0)}ms) covers total narration (${expectedNarrationMs.toFixed(0)}ms)`
     );
+  }
+
+  for (const outName of ["audio.mp3", "config.json"]) {
+    const path = join("out", CARD_ID, outName);
+    assert(statSync(path).size > 0, `${path} is non-empty`);
   }
 
   console.log("SMOKE TEST PASSED");

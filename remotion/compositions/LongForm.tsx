@@ -12,10 +12,10 @@ import { BackgroundMusic } from "../components/BackgroundMusic";
 import { Outro } from "../components/Outro";
 import { buildTimeline } from "../lib/useCardTimeline";
 import { currentPhaseIndex } from "../lib/progress";
-import { easeInCubic, easeOutCubic } from "../lib/easing";
+import { easeInCubic, easeInOutCubic, easeOutCubic } from "../lib/easing";
 import { closingEffect, openingEffect } from "../lib/opening";
 import { answerFontFor } from "../lib/answerFonts";
-import { fitFontSize } from "../lib/fitText";
+import { estimateLineCount, fitFontSize } from "../lib/fitText";
 import type { CardTiming } from "../lib/types";
 
 const CONTENT_LEFT = 170;
@@ -91,11 +91,51 @@ export function LongForm({
     [byKey["answer"].words],
   );
 
+  // Title opening: the karaoke plays centered, oversized and heavier, then the
+  // title settles into its TITLE_TOP anchor while the font size tweens down —
+  // the browser reflows every frame, so line breaks move naturally.
+  const titleBigSize = useMemo(
+    () =>
+      fitFontSize([byKey["title"].words.map((w) => w.word)], {
+        maxWidth: CONTENT_WIDTH,
+        maxHeight: 1080 * 0.75,
+        lineHeight: TITLE_LINE_HEIGHT,
+        max: Math.round(theme.fonts.titleSize * theme.titleIntro.sizeBoost),
+        min: titleSize,
+        charWidthRatio: TITLE_WIDTH_RATIO,
+      }),
+    [byKey["title"].words, titleSize],
+  );
+
   const detailPhases = phases.filter((p) => p.key.startsWith("detail-"));
 
   const titlePhase = phaseByKey["title"];
   const answerPhase = phaseByKey["answer"];
   const titleDone = frame >= titlePhase.endFrame;
+
+  const settleFrames = Math.round((theme.titleIntro.settleMs / 1000) * fps);
+  const boxFadeFrames = Math.round((theme.titleIntro.boxFadeMs / 1000) * fps);
+  const settle = interpolate(frame, [titlePhase.endFrame, titlePhase.endFrame + settleFrames], [0, 1], {
+    easing: easeInOutCubic,
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const bigLines = estimateLineCount(
+    byKey["title"].words.map((w) => w.word),
+    { fontSize: titleBigSize, maxWidth: CONTENT_WIDTH, charWidthRatio: TITLE_WIDTH_RATIO },
+  );
+  const centerTop = (1080 - bigLines * titleBigSize * TITLE_LINE_HEIGHT) / 2;
+  const titleTop = centerTop + (TITLE_TOP - centerTop) * settle;
+  const titleFontSize = titleBigSize + (titleSize - titleBigSize) * settle;
+  const titleWeight = Math.round(theme.titleIntro.startWeight + (theme.fonts.titleWeight - theme.titleIntro.startWeight) * settle);
+
+  // The answer box fades in (with its dimmed preview text) only after the
+  // title has landed; the answer narration then starts and lights it up.
+  const boxFadeStart = titlePhase.endFrame + settleFrames;
+  const boxOpacity = interpolate(frame, [boxFadeStart, boxFadeStart + boxFadeFrames], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   const progressIndex = currentPhaseIndex(phases, frame);
   const progressPhaseStart = phases[progressIndex]?.startFrame ?? 0;
@@ -131,21 +171,22 @@ export function LongForm({
           <Header main={main} section={section} topic={topic} author={author} position="top" />
 
           <Sequence from={0} layout="none">
-            <div style={{ position: "absolute", top: TITLE_TOP, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>
+            <div style={{ position: "absolute", top: titleTop, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>
               <KaraokeText
                 words={byKey["title"].words}
                 currentMs={(frame / fps) * 1000}
                 frame={frame}
-                fontSize={titleSize}
+                fontSize={titleFontSize}
+                fontWeight={titleWeight}
                 bold
                 boil
               />
             </div>
           </Sequence>
 
-          {titleDone && (
-            <Sequence from={answerPhase.startFrame} layout="none">
-              <div style={{ position: "absolute", top: ANSWER_TOP, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>
+          {frame >= boxFadeStart && (
+            <Sequence from={boxFadeStart} layout="none">
+              <div style={{ position: "absolute", top: ANSWER_TOP, left: CONTENT_LEFT, width: CONTENT_WIDTH, opacity: boxOpacity }}>
                 <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", background: theme.colors.answerBg, borderRadius: 12, padding: `${ANSWER_PAD_V}px ${ANSWER_PAD_H}px`, overflow: "hidden", boxShadow: theme.answerShadow }}>
                   <GrainOverlay frame={frame} id="grain-answer-lf" opacity={0.35} radius={12} />
                   <KaraokeText

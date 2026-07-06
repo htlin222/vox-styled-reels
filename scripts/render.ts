@@ -1,10 +1,23 @@
 import { bundle } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
-import { readdirSync } from "fs";
+import { execSync } from "child_process";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { VERSION } from "remotion";
+import { theme } from "../remotion/theme";
 
 const CARDS_DIR = "cards";
+const AUDIO_DIR = "remotion/audio";
 const OUT_DIR = "out";
+
+// Each card renders into its own folder: out/<slug>/{long.mp4, short.mp4,
+// audio.mp3, config.json}. audio.mp3 is the final mix (narration + music + sfx)
+// pulled from the long cut; config.json snapshots everything needed to
+// reproduce this exact render later.
+const CUTS = [
+  { compositionId: "LongForm", outName: "long.mp4" },
+  { compositionId: "Shorts", outName: "short.mp4" },
+] as const;
 
 async function main() {
   // Must point at remotion/index.ts (the file that calls registerRoot()), not Root.tsx directly —
@@ -14,18 +27,19 @@ async function main() {
 
   for (const file of cardFiles) {
     const cardId = file.replace(/\.json$/, "");
-    const { id: cardIdJson, topic, author } = JSON.parse(
-      await (await import("fs/promises")).readFile(join(CARDS_DIR, file), "utf-8")
-    );
+    const card = JSON.parse(readFileSync(join(CARDS_DIR, file), "utf-8"));
+    const { id: cardIdJson, topic, author } = card;
+    const cardOut = join(OUT_DIR, cardId);
+    mkdirSync(cardOut, { recursive: true });
 
-    for (const compositionId of ["LongForm", "Shorts"] as const) {
+    for (const { compositionId, outName } of CUTS) {
       const composition = await selectComposition({
         serveUrl: bundleLocation,
         id: compositionId,
         inputProps: { cardId: cardIdJson, topic, author },
       });
 
-      const outputLocation = join(OUT_DIR, `${cardId}-${compositionId}.mp4`);
+      const outputLocation = join(cardOut, outName);
       console.log(`Rendering ${outputLocation} (${composition.durationInFrames} frames)...`);
 
       await renderMedia({
@@ -38,6 +52,23 @@ async function main() {
 
       console.log(`  done: ${outputLocation}`);
     }
+
+    execSync(`ffmpeg -y -i "${join(cardOut, "long.mp4")}" -vn -q:a 2 "${join(cardOut, "audio.mp3")}"`, {
+      stdio: "ignore",
+    });
+    console.log(`  done: ${join(cardOut, "audio.mp3")}`);
+
+    const timing = JSON.parse(readFileSync(join(AUDIO_DIR, cardId, "timing.json"), "utf-8"));
+    const config = {
+      renderedAt: new Date().toISOString(),
+      gitCommit: execSync("git rev-parse HEAD").toString().trim(),
+      remotionVersion: VERSION,
+      card,
+      timing,
+      theme,
+    };
+    writeFileSync(join(cardOut, "config.json"), JSON.stringify(config, null, 2));
+    console.log(`  done: ${join(cardOut, "config.json")}`);
   }
 }
 
