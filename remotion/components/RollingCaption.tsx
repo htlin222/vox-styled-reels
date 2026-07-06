@@ -13,6 +13,7 @@ export function RollingCaption({
   maxWordsPerChunk = 14,
   boil = false,
   fontFamily = theme.fonts.family,
+  lineHeight = 1.5,
 }: {
   words: WordTiming[];
   currentMs: number;
@@ -21,6 +22,7 @@ export function RollingCaption({
   maxWordsPerChunk?: number;
   boil?: boolean;
   fontFamily?: string;
+  lineHeight?: number;
 }) {
   const chunks = chunkWords(words, maxWordsPerChunk);
   const activeChunk = chunks[activeChunkIndex(chunks, currentMs)];
@@ -34,7 +36,7 @@ export function RollingCaption({
         fontSize,
         color: theme.colors.ink,
         textAlign: "left",
-        lineHeight: 1.5,
+        lineHeight,
       }}
     >
       {activeChunk.words.map((w, i) => {
