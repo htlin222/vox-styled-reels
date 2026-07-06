@@ -80,7 +80,11 @@ async function processCard(cardPath: string) {
 }
 
 async function main() {
-  const files = readdirSync(CARDS_DIR).filter((f) => f.endsWith(".json") && !f.startsWith("_"));
+  // Optional args narrow the run to specific card ids: pnpm audio <cardId...>
+  const only = process.argv.slice(2);
+  const files = readdirSync(CARDS_DIR)
+    .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
+    .filter((f) => only.length === 0 || only.includes(f.replace(/\.json$/, "")));
   for (const file of files) {
     await processCard(join(CARDS_DIR, file));
   }

@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"audio": "tsx scripts/generate-audio.ts",
+		"validate": "tsx scripts/validate-cards.ts",
 		"render": "tsx scripts/render.ts",
 		"still": "tsx scripts/still.ts",
 		"studio": "remotion studio remotion/index.ts",

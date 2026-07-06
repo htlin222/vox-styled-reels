@@ -1,0 +1,101 @@
+name: Release cards
+
+# When card JSONs land on main and pass the format check, build each changed
+# card (TTS audio + Remotion render) and publish long.mp4 / short.mp4 /
+# audio.mp3 / config.json as assets on a per-card GitHub Release (tag card-<id>).
+# Re-pushing a card updates its release assets in place.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cards/*.json"
+  workflow_dispatch:
+    inputs:
+      card_ids:
+        description: "Space-separated card ids to build (empty = all cards)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed cards
+        id: cards
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ inputs.card_ids }}" ]; then
+              ids="${{ inputs.card_ids }}"
+            else
+              ids=$(ls cards/*.json | grep -v '/_' | xargs -n1 basename | sed 's/\.json$//' | tr '\n' ' ')
+            fi
+          else
+            before="${{ github.event.before }}"
+            if [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before" 2>/dev/null; then
+              range="HEAD^..HEAD"
+            else
+              range="$before..HEAD"
+            fi
+            ids=$(git diff --name-only --diff-filter=AM "$range" -- 'cards/*.json' \
+              | grep -v '^cards/_' | xargs -r -n1 basename | sed 's/\.json$//' | tr '\n' ' ')
+          fi
+          echo "ids=$ids" >> "$GITHUB_OUTPUT"
+          echo "Cards to build: ${ids:-none}"
+
+      - name: Stop if no cards changed
+        if: steps.cards.outputs.ids == ''
+        run: echo "No added/modified cards — nothing to build."
+
+      - uses: pnpm/action-setup@v4
+        if: steps.cards.outputs.ids != ''
+
+      - uses: actions/setup-node@v4
+        if: steps.cards.outputs.ids != ''
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.cards.outputs.ids != ''
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate card format
+        if: steps.cards.outputs.ids != ''
+        run: pnpm validate
+
+      - name: Run tests
+        if: steps.cards.outputs.ids != ''
+        run: pnpm test
+
+      - name: Generate TTS audio
+        if: steps.cards.outputs.ids != ''
+        run: pnpm audio ${{ steps.cards.outputs.ids }}
+
+      - name: Render videos
+        if: steps.cards.outputs.ids != ''
+        run: pnpm render ${{ steps.cards.outputs.ids }}
+
+      - name: Publish releases
+        if: steps.cards.outputs.ids != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for id in ${{ steps.cards.outputs.ids }}; do
+            tag="card-$id"
+            title=$(node -p "require('./cards/$id.json').title")
+            if ! gh release view "$tag" >/dev/null 2>&1; then
+              gh release create "$tag" --title "$title" \
+                --notes "Automated build of card \`$id\` from $GITHUB_SHA."
+            fi
+            gh release upload "$tag" --clobber \
+              "out/$id/long.mp4" "out/$id/short.mp4" "out/$id/audio.mp3" "out/$id/config.json"
+          done

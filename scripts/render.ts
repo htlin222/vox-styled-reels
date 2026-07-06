@@ -23,7 +23,11 @@ async function main() {
   // Must point at remotion/index.ts (the file that calls registerRoot()), not Root.tsx directly —
   // see Task 14 Step 2b. bundle() validates that the entry point file literally contains "registerRoot".
   const bundleLocation = await bundle({ entryPoint: join("remotion", "index.ts"), publicDir: "assets" });
-  const cardFiles = readdirSync(CARDS_DIR).filter((f) => f.endsWith(".json") && !f.startsWith("_"));
+  // Optional args narrow the run to specific card ids: pnpm render <cardId...>
+  const only = process.argv.slice(2);
+  const cardFiles = readdirSync(CARDS_DIR)
+    .filter((f) => f.endsWith(".json") && !f.startsWith("_"))
+    .filter((f) => only.length === 0 || only.includes(f.replace(/\.json$/, "")));
 
   for (const file of cardFiles) {
     const cardId = file.replace(/\.json$/, "");
