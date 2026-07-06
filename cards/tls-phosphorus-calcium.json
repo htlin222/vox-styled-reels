@@ -1,0 +1,15 @@
+{
+  "id": "tls-phosphorus-calcium",
+  "main": "Board Review",
+  "section": "Oncology",
+  "topic": "Tumor Lysis Syndrome",
+  "author": "Your Name",
+  "title": "Why withhold calcium when phosphorus is severely elevated in tumor lysis syndrome?",
+  "answer": "Giving calcium before lowering phosphorus risks acute calcium-phosphate precipitation, causing irreversible kidney damage and metastatic calcification.",
+  "detail": [
+    "Lower phosphorus first using non-calcium phosphate binders like **sevelamer**, plus aggressive IV hydration.",
+    "The calcium-phosphorus product here is critically high; **metastatic calcification** occurs once it exceeds 55 to 60.",
+    "Treat **hypocalcemia** only after phosphorus drops below 7 to 8, unless seizures or severe arrhythmias occur.",
+    "Consider urgent **hemodialysis** if phosphorus stays above 10 despite binders or if acute kidney injury worsens."
+  ]
+}
