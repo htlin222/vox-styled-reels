@@ -10,3 +10,7 @@ remotion/audio/**/*.txt
 
 # generated TTS audio copied into the served assets dir (assets/sfx stays tracked)
 assets/audio/
+
+# locally-installed mcq Claude Code skill (bundles a personal .env key)
+.claude/skills/mcq/
+mcq.skill
