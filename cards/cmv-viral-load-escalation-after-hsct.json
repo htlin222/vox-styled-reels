@@ -1,0 +1,14 @@
+{
+  "id": "cmv-viral-load-escalation-after-hsct",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Cytomegalovirus (CMV)",
+  "author": "Dr. Lizard",
+  "title": "How quickly does CMV viral load escalate once reactivation begins after HSCT?",
+  "answer": "CMV viral load can progress from 250 to 1000 IU/mL in just 4 days median.",
+  "detail": [
+    "Rapid escalation occurs after exceeding 250 IU/mL.",
+    "Viral doubling time under 2 days predicts need for treatment."
+  ],
+  "releaseNote": "CMV viral load can escalate rapidly after HSCT, with a median increase from 250 to 1000 IU/mL in just 4 days. Rapid escalation and viral doubling time under 2 days may indicate the need for treatment."
+}
