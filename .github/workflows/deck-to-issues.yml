@@ -1,0 +1,116 @@
+name: Deck to card issues
+
+# When an issue is labelled "deck", deterministically parse the demo.md-style
+# body into individual cards and create one `card`-labelled issue per card.
+# Each spawned issue triggers issue-to-card.yml → PR → merge → render → release.
+#
+# The parsing is purely deterministic (no LLM): it reads **title**, **answer**,
+# **detail** fields separated by ---, strips trailing Figures and ### References,
+# and removes citation markers like [1].
+
+on:
+  issues:
+    types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Deck issue number to split"
+        required: true
+
+concurrency:
+  group: deck-to-issues-${{ github.event.issue.number || github.event.inputs.issue_number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  split:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.issue.user.login == 'htlin222' &&
+       contains(github.event.issue.labels.*.name, 'deck'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_NUMBER: ${{ github.event.inputs.issue_number }}
+          EVENT_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            number="$DISPATCH_NUMBER"
+          else
+            number="$EVENT_NUMBER"
+          fi
+          gh issue view "$number" --json number,title,body,author,labels > issue.json
+          author=$(jq -r '.author.login' issue.json)
+          has_label=$(jq -r '[.labels[].name] | index("deck") != null' issue.json)
+          if [ "$author" != "htlin222" ] || [ "$has_label" != "true" ]; then
+            echo "Issue #$number is not an htlin222-authored deck issue; skipping." >&2
+            exit 1
+          fi
+          {
+            echo "number=$number"
+            echo "title=$(jq -r '.title' issue.json)"
+          } >> "$GITHUB_OUTPUT"
+
+      # Preflight: check the deck is parseable and has cards
+      - name: Check card count
+        id: count
+        run: |
+          export ISSUE_BODY="$(jq -r '.body' issue.json)"
+          export ISSUE_TITLE="${{ steps.issue.outputs.title }}"
+          pnpm deck-to-issues --check
+
+      - name: Guard empty deck
+        if: steps.count.outputs.card_count == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ steps.issue.outputs.number }}
+        run: |
+          gh issue comment "$NUMBER" --body "$(printf '❌ Could not parse any cards from this deck issue.\n\nExpected format:\n```\n**title**: ...\n**answer**: ...\n**detail**:\n- bullet 1\n- bullet 2\n---\n(next card)\n```\n\n_Aborting — no card issues were created._')"
+          exit 1
+
+      # Create individual card issues — each triggers issue-to-card.yml
+      - name: Split deck into card issues
+        id: split
+        env:
+          GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
+          ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
+          ISSUE_TITLE: ${{ steps.issue.outputs.title }}
+        run: |
+          export ISSUE_BODY="$(jq -r '.body' issue.json)"
+          pnpm deck-to-issues
+
+      # Comment on the deck issue with a summary
+      - name: Post summary
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ steps.issue.outputs.number }}
+          CARD_COUNT: ${{ steps.split.outputs.card_count }}
+          CARD_ISSUES: ${{ steps.split.outputs.card_issues }}
+        run: |
+          issues=""
+          IFS=',' read -ra nums <<< "$CARD_ISSUES"
+          for n in "${nums[@]}"; do
+            issues="$issues"$'\n'"- #$n"
+          done
+          gh issue comment "$NUMBER" --body "$(printf '✅ Deck split into **%s** card issue(s):\n%s\n\nEach will be processed by the card pipeline (generate → PR → merge → render → release).' "$CARD_COUNT" "$issues")"

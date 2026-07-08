@@ -10,6 +10,7 @@
 		"audio": "pnpm sync-config && tsx scripts/generate-audio.ts",
 		"validate": "tsx scripts/validate-cards.ts",
 		"issue-to-cards": "tsx scripts/issue-to-cards.ts",
+		"deck-to-issues": "tsx scripts/deck-to-issues.ts",
 		"issue-progress": "tsx scripts/issue-progress.ts",
 		"render": "pnpm sync-config && tsx scripts/render.ts",
 		"still": "pnpm sync-config && tsx scripts/still.ts",
