@@ -99,19 +99,20 @@ jobs:
           export ISSUE_BODY="$(jq -r '.body' issue.json)"
           pnpm deck-to-issues
 
-      # Label each spawned issue with `card` using the PAT so the `labeled`
-      # event triggers issue-to-card.yml. GITHUB_TOKEN can't trigger other
-      # workflows, so the PAT is required here for the chain reaction.
-      - name: Label card issues
+      # Trigger issue-to-card.yml for each spawned issue via workflow_dispatch.
+      # GITHUB_TOKEN can't trigger other workflows, so the PAT is required.
+      # The issues already have the `card` label (from gh issue create above);
+      # issue-to-card.yml re-checks it in its Resolve step.
+      - name: Trigger card pipeline
         env:
           GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
           CARD_ISSUES: ${{ steps.split.outputs.card_issues }}
         run: |
           IFS=',' read -ra nums <<< "$CARD_ISSUES"
           for n in "${nums[@]}"; do
-            echo "Labelling issue #$n with 'card'"
-            gh issue edit "$n" --add-label card
-            sleep 2
+            echo "Dispatching issue-to-card for #$n"
+            gh workflow run issue-to-card.yml -f issue_number="$n"
+            sleep 3
           done
 
       # Comment on the deck issue with a summary, then close it.

@@ -349,7 +349,7 @@ async function main() {
     );
 
     const result = execSync(
-      `gh issue create --title "${issueTitle.replace(/"/g, '\\"')}" --body-file -`,
+      `gh issue create --label card --title "${issueTitle.replace(/"/g, '\\"')}" --body-file -`,
       {
         input: issueBody,
         encoding: "utf-8",
