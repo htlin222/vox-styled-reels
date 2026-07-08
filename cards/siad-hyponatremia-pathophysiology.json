@@ -1,0 +1,16 @@
+{
+  "id": "siad-hyponatremia-pathophysiology",
+  "main": "Board Review",
+  "section": "Nephrology",
+  "topic": "Electrolyte Disorders",
+  "author": "Dr. Lizard",
+  "title": "What is the pathophysiology of hyponatremia in the syndrome of inappropriate antidiuresis?",
+  "answer": "SIAD involves AVP secretion without osmotic or hemodynamic stimuli, causing water retention in euvolemic patients.",
+  "detail": [
+    "Hyponatremia typically reflects water excess relative to body sodium and potassium, impairing electrolyte-free water excretion.",
+    "AVP activates vasopressin 2 receptors in collecting ducts, promoting water retention and reducing aquaresis.",
+    "In hypovolemic and hypervolemic disorders, AVP release is triggered by reduced effective arterial blood volume.",
+    "Hyponatremia requires water intake to exceed losses from kidneys and other routes, regardless of mechanism."
+  ],
+  "releaseNote": "The pathophysiology of hyponatremia in the syndrome of inappropriate antidiuresis involves the secretion of antidiuretic hormone (AVP) without osmotic or hemodynamic stimuli, leading to water retention and impaired electrolyte-free water excretion in euvolemic patients."
+}
