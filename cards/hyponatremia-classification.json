@@ -1,0 +1,16 @@
+{
+  "id": "hyponatremia-classification",
+  "main": "Board Review",
+  "section": "Nephrology",
+  "topic": "Electrolyte Imbalance",
+  "author": "Dr. Lizard",
+  "title": "How is hyponatremia classified based on extracellular fluid volume status for diagnosis?",
+  "answer": "Hyponatremia is classified as hypovolemic, euvolemic, or hypervolemic based on extracellular fluid volume assessment.",
+  "detail": [
+    "Volume status assessment provides the most useful classification because serum sodium alone is insufficient.",
+    "Hypovolemic hyponatremia results from decreased extracellular fluid volume with sodium and water losses.",
+    "Euvolemic hyponatremia occurs with normal extracellular fluid volume, commonly from SIAD or primary polydipsia.",
+    "Hypervolemic hyponatremia involves increased extracellular fluid volume, seen in heart failure, cirrhosis, or nephrotic syndrome."
+  ],
+  "releaseNote": "Hyponatremia can be classified into three types based on extracellular fluid volume status: hypovolemic, euvolemic, and hypervolemic, each with distinct underlying causes and characteristics."
+}
