@@ -116,13 +116,47 @@ jobs:
           path: node_modules/.remotion
           key: remotion-browser-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
+      # Trace this card back to its originating issue (the add-commit records
+      # "from issue #N"). Empty for hand-added cards / workflow_dispatch — every
+      # progress + close step below is guarded on it, so those runs stay silent.
+      - name: Resolve source issue
+        id: src
+        run: |
+          id="${{ matrix.card }}"
+          add_msg=$(git log --diff-filter=A --format=%s -- "cards/$id.json" | grep -i 'issue #' | head -1 || true)
+          issue=$(printf '%s' "$add_msg" | grep -oE '#[0-9]+' | head -1 | tr -d '#' || true)
+          echo "issue=$issue" >> "$GITHUB_OUTPUT"
+          echo "Source issue: ${issue:-none}"
+
+      - name: Progress → generating audio
+        if: steps.src.outputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm issue-progress "${{ steps.src.outputs.issue }}" audio
+
       - name: Generate TTS audio
         run: pnpm audio ${{ matrix.card }}
+
+      - name: Progress → rendering
+        if: steps.src.outputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm issue-progress "${{ steps.src.outputs.issue }}" render
 
       - name: Render videos
         run: pnpm render ${{ matrix.card }}
 
+      - name: Progress → publishing
+        if: steps.src.outputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: pnpm issue-progress "${{ steps.src.outputs.issue }}" release
+
       - name: Publish release
+        id: publish
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -139,14 +173,18 @@ jobs:
           fi
           gh release upload "$tag" --clobber \
             "out/$id/long.mp4" "out/$id/short.mp4" "out/$id/audio.mp3" "out/$id/config.json"
+          # Expose the release URL for the final progress + close step.
+          echo "url=$(gh release view "$tag" --json url -q .url)" >> "$GITHUB_OUTPUT"
 
-          # If this card came from an issue (the add-commit records "from issue
-          # #N"), comment the release link and close it. No-op for cards added
-          # by hand or rebuilt via workflow_dispatch.
-          add_msg=$(git log --diff-filter=A --format=%s -- "cards/$id.json" | grep -i 'issue #' | head -1 || true)
-          issue=$(printf '%s' "$add_msg" | grep -oE '#[0-9]+' | head -1 | tr -d '#' || true)
-          if [ -n "$issue" ]; then
-            url=$(gh release view "$tag" --json url -q .url)
-            gh issue comment "$issue" --body "🎬 Video built and released: $url" || true
-            gh issue close "$issue" --reason completed || true
-          fi
+      # Release succeeded: flip the progress comment to 🎉 (with the release link
+      # and total elapsed time), then close the originating issue.
+      - name: Finish & close issue
+        if: success() && steps.src.outputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ISSUE: ${{ steps.src.outputs.issue }}
+          URL: ${{ steps.publish.outputs.url }}
+        run: |
+          pnpm issue-progress "$ISSUE" done "$URL"
+          gh issue close "$ISSUE" --reason completed || true
