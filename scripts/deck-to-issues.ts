@@ -342,7 +342,7 @@ async function main() {
     const issueTitle = card.title;
     const issueBody =
       formatCardIssueBody(card) +
-      (deckNumber ? `\n\n---\n_From deck #${deckNumber}_` : "");
+      (deckNumber ? `\n\n_From deck #${deckNumber}_` : "");
 
     console.log(
       `  Creating issue ${i + 1}/${cards.length}: ${issueTitle.slice(0, 60)}…`,
