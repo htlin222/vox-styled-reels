@@ -1,0 +1,140 @@
+name: Issue to card
+
+# Turn a curated GitHub Issue into card JSON via Groq, then open a PR for human
+# review. Guardrails: only issues labelled `card` AND authored by htlin222 are
+# processed (LLM generation shouldn't run on arbitrary issues). The workflow
+# only ever opens a PR — nothing renders until a human merges it, at which
+# point release-cards.yml builds the videos on push to main.
+#
+# Trigger it by opening an issue with the `card` label, or adding the label to
+# an existing issue. You can also re-run on demand via workflow_dispatch with
+# an issue number.
+
+on:
+  issues:
+    types: [opened, labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: "Issue number to convert"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  convert:
+    # Gate: label must be `card` and author must be htlin222. For labeled/opened
+    # events we can read the payload directly; workflow_dispatch is manual (and
+    # only maintainers can dispatch), so it's allowed through and re-checked
+    # after we fetch the issue.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.issue.user.login == 'htlin222' &&
+       contains(github.event.issue.labels.*.name, 'card'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Resolve issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_NUMBER: ${{ github.event.inputs.issue_number }}
+          EVENT_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            number="$DISPATCH_NUMBER"
+          else
+            number="$EVENT_NUMBER"
+          fi
+          # Fetch canonical issue data (also re-validates the guardrails for the
+          # workflow_dispatch path, which skips the job-level `if`).
+          gh issue view "$number" --json number,title,body,author,labels > issue.json
+          author=$(jq -r '.author.login' issue.json)
+          has_label=$(jq -r '[.labels[].name] | index("card") != null' issue.json)
+          if [ "$author" != "htlin222" ] || [ "$has_label" != "true" ]; then
+            echo "Issue #$number is not an htlin222-authored card issue; skipping." >&2
+            exit 1
+          fi
+          {
+            echo "number=$number"
+            echo "title=$(jq -r '.title' issue.json)"
+          } >> "$GITHUB_OUTPUT"
+
+      # Preflight: one card per issue keeps generation robust (small, fast,
+      # rate-limit-safe LLM call) and PRs atomic. If the author dumped several
+      # cards into one issue, don't burn an LLM call — comment with guidance and
+      # abort so they can split it up.
+      - name: Detect card count
+        id: count
+        env:
+          ISSUE_BODY_JSON: issue.json
+        run: |
+          export ISSUE_BODY="$(jq -r '.body' issue.json)"
+          pnpm issue-to-cards --check
+
+      - name: Guard multi-card issues
+        if: steps.count.outputs.card_count != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ steps.issue.outputs.number }}
+          COUNT: ${{ steps.count.outputs.card_count }}
+        run: |
+          gh issue comment "$NUMBER" --body "$(printf 'This issue looks like it contains **%s cards**. To keep generation reliable and reviews atomic, please put **one card per issue**.\n\n**How to fix:** split this into %s separate issues (each still labelled `card`), one card each, then reopen/relabel. Each will get its own PR and video.\n\n_Aborting — no cards were generated._' "$COUNT" "$COUNT")"
+          echo "::error::Issue #$NUMBER contains $COUNT cards; expected 1. Aborting."
+          exit 1
+
+      - name: Generate cards with Groq
+        id: gen
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ISSUE_TITLE: ${{ steps.issue.outputs.title }}
+        run: |
+          export ISSUE_BODY="$(jq -r '.body' issue.json)"
+          export ISSUE_AUTHOR="$(jq -r '.author.name // .author.login' issue.json)"
+          pnpm issue-to-cards
+
+      - name: Validate generated cards
+        run: pnpm validate ${{ steps.gen.outputs.files }}
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NUMBER: ${{ steps.issue.outputs.number }}
+          TITLE: ${{ steps.issue.outputs.title }}
+          FILES: ${{ steps.gen.outputs.files }}
+          COUNT: ${{ steps.gen.outputs.count }}
+        run: |
+          rm -f issue.json
+          branch="card/issue-$NUMBER"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add $FILES
+          git commit -m "cards: add $COUNT card(s) from issue #$NUMBER"
+          git push -f origin "$branch"
+          body=$(printf 'Generated %s card(s) from #%s via Groq.\n\n**Review the JSON, edit as needed, then merge** — merging to `main` triggers the video build (release-cards.yml).\n\nFiles:\n' "$COUNT" "$NUMBER")
+          for f in $FILES; do body="$body"$'\n'"- \`$f\`"; done
+          if gh pr view "$branch" >/dev/null 2>&1; then
+            gh pr edit "$branch" --title "Cards from issue #$NUMBER: $TITLE" --body "$body"
+          else
+            gh pr create --base main --head "$branch" \
+              --title "Cards from issue #$NUMBER: $TITLE" \
+              --body "$body"
+          fi
+          gh issue comment "$NUMBER" --body "Opened a PR from branch \`$branch\` with $COUNT generated card(s). Review and merge to build the videos."

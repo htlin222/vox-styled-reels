@@ -1,24 +1,10 @@
 import { readdirSync, readFileSync } from "fs";
 import { basename, join } from "path";
-import { z } from "zod";
+import { cardSchema } from "../remotion/lib/cardSchema";
+
+export { cardSchema };
 
 const CARDS_DIR = "cards";
-
-const nonEmpty = z.string().trim().min(1);
-
-export const cardSchema = z
-  .object({
-    id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "id must be kebab-case (lowercase letters, digits, hyphens)"),
-    main: nonEmpty,
-    section: nonEmpty,
-    topic: nonEmpty,
-    author: nonEmpty,
-    title: nonEmpty,
-    answer: nonEmpty,
-    detail: z.array(nonEmpty).min(1),
-    releaseNote: nonEmpty,
-  })
-  .strict();
 
 function main() {
   const files = process.argv.slice(2).length

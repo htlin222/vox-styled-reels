@@ -8,6 +8,7 @@
 		"prepare": "git config core.hooksPath .githooks",
 		"audio": "tsx scripts/generate-audio.ts",
 		"validate": "tsx scripts/validate-cards.ts",
+		"issue-to-cards": "tsx scripts/issue-to-cards.ts",
 		"render": "tsx scripts/render.ts",
 		"still": "tsx scripts/still.ts",
 		"studio": "remotion studio remotion/index.ts",
