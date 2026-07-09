@@ -11,9 +11,8 @@ name: Post one reel to FB (hourly queue)
 # Tool       = fb-cli's `post-reel`, installed on the fly straight from git.
 
 on:
-  # schedule disabled until the pipeline is verified end-to-end; re-enable after.
-  # schedule:
-  #   - cron: "17 * * * *"   # hourly at :17
+  schedule:
+    - cron: "17 * * * *" # hourly at :17
   workflow_dispatch: {} # manual trigger
 
 concurrency:
