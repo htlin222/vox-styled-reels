@@ -1,0 +1,16 @@
+{
+  "id": "paroxysmal-nocturnal-hemoglobinuria-genes",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria",
+  "author": "Dr. Lizard",
+  "title": "What genes other than PIGA can cause paroxysmal nocturnal hemoglobinuria?",
+  "answer": "Rare cases involve PIGM or PIGT mutations, but PIGA accounts for over 95 percent of PNH cases.",
+  "detail": [
+    "PIGA encodes the first enzyme in GPI anchor biosynthesis, making it the most common mutation site.",
+    "PIGM and PIGT encode other enzymes in the GPI anchor synthesis pathway, causing similar phenotypes.",
+    "HMGA genes encode high mobility group proteins involved in chromatin remodeling and are unrelated to PNH pathogenesis.",
+    "All PIG gene mutations result in deficient GPI anchor expression, leading to loss of CD55 and CD59."
+  ],
+  "releaseNote": "This card discusses the genetic causes of paroxysmal nocturnal hemoglobinuria (PNH), with a focus on genes other than PIGA."
+}
