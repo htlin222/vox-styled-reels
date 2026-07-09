@@ -1,0 +1,17 @@
+{
+  "id": "pnh-incidence-despite-x-linked-piga-mutations",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria (PNH)",
+  "author": "Dr. Lizard",
+  "title": "Why do males and females have equal PNH incidence despite X-linked PIGA mutations?",
+  "answer": "PIGA mutations are somatic, not germline, and X-inactivation in females allows single-copy mutations to cause disease.",
+  "detail": [
+    "PIGA gene is located on the X chromosome at position Xp22.2 in hematopoietic stem cells.",
+    "Males need only one X chromosome mutation since they have a single X chromosome per cell.",
+    "Females undergo random X-inactivation early in development, leaving only one active X chromosome per cell.",
+    "If the mutated X is active in a stem cell, that cell becomes PNH-positive regardless of sex.",
+    "The mutation occurs somatically in blood stem cells, not in germline, so it is not inherited."
+  ],
+  "releaseNote": "PIGA mutations in PNH are somatic, not germline, and X-inactivation in females allows single-copy mutations to cause disease, resulting in equal PNH incidence in males and females."
+}
