@@ -1,0 +1,16 @@
+{
+  "id": "factor-b-inhibitors-vs-c3-inhibitors-for-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria (PNH)",
+  "author": "Dr. Lizard",
+  "title": "Why are factor B inhibitors theoretically superior to C3 inhibitors for PNH?",
+  "answer": "Factor B inhibitors block C3 convertase formation while preserving partial C3 function, reducing infection risk and breakthrough hemolysis.",
+  "detail": [
+    "Factor B is essential for forming C3bBb, the alternative pathway C3 convertase that drives PNH pathology.",
+    "Blocking factor B prevents both intravascular and extravascular hemolysis without completely eliminating C3 opsonization of pathogens.",
+    "Iptacopan is an oral factor B inhibitor, offering convenient twice-daily dosing versus subcutaneous pegcetacoplan injections.",
+    "Factor B inhibition avoids the enzymatic amplification risk seen with incomplete C3 blockade during breakthrough events."
+  ],
+  "releaseNote": "Factor B inhibitors are theoretically superior to C3 inhibitors for PNH due to their ability to block C3 convertase formation while preserving partial C3 function, reducing infection risk and breakthrough hemolysis."
+}
