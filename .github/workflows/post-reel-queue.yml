@@ -1,0 +1,87 @@
+name: Post one reel to FB (hourly queue)
+
+# Drips card releases to the Dr. 蜥蜴 Facebook Page as Reels, one per hour.
+# Rate limit: the Reels API allows 30 API-published posts per rolling 24h,
+# so 1/hour (max 24/day) stays comfortably under the ceiling.
+#
+# Queue      = every `card-*` release, oldest first.
+# Posted log = .github/fb-posted.txt (one tag per line), committed back after
+#              each successful post so the same reel is never published twice.
+# Tool       = fb-cli's `post-reel`, installed on the fly straight from git.
+
+on:
+  schedule:
+    - cron: "17 * * * *" # hourly at :17
+  workflow_dispatch: {} # manual trigger for testing
+
+concurrency:
+  group: fb-reel-queue
+  cancel-in-progress: false
+
+permissions:
+  contents: write # to commit the updated posted-log back to the repo
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Pick oldest unposted card release
+        id: pick
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          touch .github/fb-posted.txt
+          # All card-* releases, oldest first.
+          mapfile -t all < <(gh release list -L 500 --json tagName,createdAt \
+            -q 'sort_by(.createdAt) | .[] | select(.tagName|startswith("card-")) | .tagName')
+          next=""
+          for t in "${all[@]}"; do
+            if ! grep -qxF "$t" .github/fb-posted.txt; then next="$t"; break; fi
+          done
+          if [ -z "$next" ]; then
+            echo "queue empty — nothing to post"
+            echo "tag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "next reel: $next"
+            echo "tag=$next" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download reel asset
+        if: steps.pick.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.pick.outputs.tag }}
+        run: |
+          gh release download "$TAG" -p short.mp4 --clobber
+          test -f short.mp4 || { echo "::error::short.mp4 missing on $TAG"; exit 1; }
+
+      - name: Publish to Facebook
+        if: steps.pick.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.pick.outputs.tag }}
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+        run: |
+          name=$(gh release view "$TAG" --json name -q .name)
+          # Caption = release title + note; drop the "---" automated-build footer.
+          note=$(gh release view "$TAG" --json body -q .body | sed '/^---$/,$d')
+          caption=$(printf '%s\n\n%s' "$name" "$note")
+          uvx --from git+https://github.com/htlin222/fb-cli fb-cli post-reel short.mp4 "$caption"
+
+      - name: Mark as posted
+        if: steps.pick.outputs.tag != ''
+        env:
+          TAG: ${{ steps.pick.outputs.tag }}
+        run: |
+          echo "$TAG" >> .github/fb-posted.txt
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/fb-posted.txt
+          git commit -m "chore(fb): posted $TAG as reel [skip ci]"
+          git push
