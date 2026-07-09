@@ -1,0 +1,16 @@
+{
+  "id": "complement-inhibitors-vaccination-protocols",
+  "main": "Board Review",
+  "section": "Immunology",
+  "topic": "Complement Inhibitors",
+  "author": "Dr. Lizard",
+  "title": "Why do proximal complement inhibitors require more aggressive vaccination protocols than C5 inhibitors?",
+  "answer": "Proximal inhibitors block C3-mediated opsonization, causing broader immunosuppression and higher encapsulated bacterial infection risk.",
+  "detail": [
+    "C3 plays a critical role in opsonizing bacteria for phagocytosis, which is impaired by C3, factor B, or factor D inhibitors.",
+    "Both C5 and proximal inhibitors require meningococcal ACWY and B vaccines plus continuous antibiotic prophylaxis.",
+    "Proximal inhibitors necessitate stronger emphasis on pneumococcal PCV and PPSV23 vaccines plus Haemophilus influenzae type b vaccination.",
+    "All vaccines should be completed at least two weeks before initiating any complement inhibitor therapy."
+  ],
+  "releaseNote": "Proximal complement inhibitors require more aggressive vaccination protocols than C5 inhibitors due to broader immunosuppression and increased risk of encapsulated bacterial infections."
+}
