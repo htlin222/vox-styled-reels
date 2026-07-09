@@ -1,0 +1,16 @@
+{
+  "id": "breakthrough-hemolysis-vs-extravascular-hemolysis-on-complement-inhibitors",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "PNH",
+  "author": "Dr. Lizard",
+  "title": "What distinguishes breakthrough hemolysis from extravascular hemolysis in PNH on complement inhibitors?",
+  "answer": "Breakthrough hemolysis is acute intravascular lysis from incomplete MAC blockade; extravascular hemolysis is chronic C3-mediated splenic clearance.",
+  "detail": [
+    "Breakthrough hemolysis occurs when C5 inhibition fails during infections or surgery, allowing MAC formation and hemoglobinuria.",
+    "Extravascular hemolysis results from C3 fragment deposition on red cells, which are cleared by liver and spleen macrophages.",
+    "Breakthrough hemolysis shows elevated LDH and hemoglobinuria; extravascular hemolysis shows positive direct antiglobulin test for C3d.",
+    "Breakthrough hemolysis requires increased C5 inhibitor dosing; extravascular hemolysis requires switching to proximal complement inhibitors."
+  ],
+  "releaseNote": "Breakthrough hemolysis and extravascular hemolysis are two distinct forms of hemolysis in PNH patients on complement inhibitors. Breakthrough hemolysis is characterized by acute intravascular lysis due to incomplete MAC blockade, while extravascular hemolysis is chronic C3-mediated splenic clearance."
+}
