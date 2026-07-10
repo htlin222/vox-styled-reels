@@ -1,0 +1,16 @@
+{
+  "id": "tp53-mutation-icc-blast-count",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes (MDS)",
+  "author": "Dr. Lizard",
+  "title": "What blast count ranges define MDS versus AML in TP53-mutated cases under ICC?",
+  "answer": "ICC uses 0-9% for MDS, 10-19% for MDS/AML, and 20% or more for AML with mutated TP53.",
+  "detail": [
+    "The 10-19% blast range creates a unique MDS/AML category specifically for TP53-mutated cases in ICC.",
+    "All three categories require TP53 VAF at least 10% for the mutated TP53 designation in ICC.",
+    "WHO-5 does not create a separate MDS/AML category for the 10-19% blast range.",
+    "At 20% or more blasts, ICC designates it as AML with mutated TP53 regardless of allelic status."
+  ],
+  "releaseNote": "ICC uses specific blast count ranges to differentiate MDS, MDS/AML, and AML in TP53-mutated cases, with a unique category for the 10-19% range and a requirement of at least 10% TP53 VAF for mutated TP53 designation."
+}
