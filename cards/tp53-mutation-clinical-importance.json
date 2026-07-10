@@ -1,0 +1,16 @@
+{
+  "id": "tp53-mutation-clinical-importance",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes (MDS)",
+  "author": "Dr. Lizard",
+  "title": "Why is distinguishing monoallelic from biallelic TP53 mutations clinically important in MDS?",
+  "answer": "Only multi-hit or biallelic TP53 mutations predict poor outcomes; monoallelic mutations behave like wild-type.",
+  "detail": [
+    "Monoallelic TP53 mutations have survival outcomes similar to TP53 wild-type MDS patients.",
+    "Biallelic or multi-hit TP53 mutations confer significantly worse prognosis and treatment resistance.",
+    "This distinction affects treatment decisions including transplant timing and clinical trial eligibility.",
+    "Approximately 66-78% of TP53-mutated MDS cases have biallelic inactivation requiring aggressive management."
+  ],
+  "releaseNote": "Distinguishing between monoallelic and biallelic TP53 mutations is crucial in MDS as it impacts treatment decisions and prognosis."
+}
