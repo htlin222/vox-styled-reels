@@ -3,3 +3,4 @@ card-tls-phosphorus-calcium
 card-scd-median-survival
 card-hyponatremia-severity-categories
 card-siad-hyponatremia-pathophysiology
+card-safe-correction-rate-for-chronic-hyponatremia
