@@ -1,0 +1,16 @@
+{
+  "id": "mds-sf3b1-exclusion-criteria",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "MDS-SF3B1",
+  "author": "Dr. Lizard",
+  "title": "Which exclusion criteria prevent diagnosis of MDS-SF3B1 in both ICC and WHO-5?",
+  "answer": "Presence of del(5q), monosomy 7, or complex karyotype excludes MDS-SF3B1 diagnosis in both systems.",
+  "detail": [
+    "These cytogenetic abnormalities indicate higher-risk disease that supersedes the SF3B1-defined category.",
+    "Del(5q) cases are classified separately as MDS with isolated del(5q) if they meet specific criteria.",
+    "Monosomy 7 and complex karyotype indicate poor prognosis that overrides favorable SF3B1 biology.",
+    "Both systems require checking cytogenetics before assigning the MDS-SF3B1 diagnosis."
+  ],
+  "releaseNote": "Exclusion criteria for MDS-SF3B1 diagnosis in ICC and WHO-5 include del(5q), monosomy 7, and complex karyotype, which indicate higher-risk disease or poor prognosis."
+}
