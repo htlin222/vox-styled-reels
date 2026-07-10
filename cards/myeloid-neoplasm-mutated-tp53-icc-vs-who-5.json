@@ -1,0 +1,16 @@
+{
+  "id": "myeloid-neoplasm-mutated-tp53-icc-vs-who-5",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Aplastic Anemia",
+  "author": "Dr. Lizard",
+  "title": "How does ICC define myeloid neoplasm with mutated TP53 differently from WHO-5?",
+  "answer": "ICC requires TP53 VAF at least 10% and recognizes multi-hit equivalent with complex karyotype.",
+  "detail": [
+    "ICC multi-hit criteria include two mutations each VAF 10% or one mutation VAF 10% plus deletion 17p.",
+    "Complex karyotype plus one TP53 mutation VAF 10% qualifies as multi-hit equivalent in ICC only.",
+    "ICC can diagnose mutated TP53 myeloid neoplasm without requiring dysplasia if multi-hit criteria are met.",
+    "ICC creates separate categories for 10-19% blasts as MDS/AML and 20% or more as AML with mutated TP53."
+  ],
+  "releaseNote": "ICC defines myeloid neoplasm with mutated TP53 differently from WHO-5 by requiring TP53 VAF at least 10% and recognizing multi-hit equivalent with complex karyotype. ICC also creates separate categories for 10-19% blasts as MDS/AML and 20% or more as AML with mutated TP53."
+}
