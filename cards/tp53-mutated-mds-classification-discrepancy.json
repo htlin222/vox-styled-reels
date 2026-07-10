@@ -1,0 +1,16 @@
+{
+  "id": "tp53-mutated-mds-classification-discrepancy",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes (MDS)",
+  "author": "Dr. Lizard",
+  "title": "What percentage of TP53-mutated MDS cases are classified discrepantly between ICC and WHO-5?",
+  "answer": "Approximately 67.5% of TP53-mutated cases receive discrepant classifications between ICC and WHO-5 systems.",
+  "detail": [
+    "The main discrepancy stems from different VAF thresholds and allelic status requirements between the systems.",
+    "ICC requires VAF at least 10% while WHO-5 has no specified VAF threshold for biallelic cases.",
+    "Complex karyotype serves as multi-hit equivalent in ICC but not in WHO-5 classification system.",
+    "Cases with 10-19% blasts are classified as MDS/AML in ICC but MDS-biTP53 in WHO-5."
+  ],
+  "releaseNote": "This card highlights the discrepancy in classification of TP53-mutated MDS cases between the International Consensus Criteria (ICC) and the World Health Organization (WHO) classification system, with approximately 67.5% of cases receiving discrepant classifications."
+}
