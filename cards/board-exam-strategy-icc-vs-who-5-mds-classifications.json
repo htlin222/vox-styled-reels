@@ -1,0 +1,16 @@
+{
+  "id": "board-exam-strategy-icc-vs-who-5-mds-classifications",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "MDS Classification",
+  "author": "Dr. Lizard",
+  "title": "What board exam strategy helps distinguish between ICC and WHO-5 MDS classifications?",
+  "answer": "Check blast count first, then TP53 VAF and allelic status, then SF3B1, then count dysplastic lineages.",
+  "detail": [
+    "Blast count determines whether the case falls into MDS, MDS/AML, or AML range initially.",
+    "TP53 VAF at least 10% with complex karyotype triggers ICC multi-hit equivalent pathway.",
+    "SF3B1 presence requires excluding del(5q), monosomy 7, and complex karyotype before assigning category.",
+    "Dysplastic lineage count determines MDS NOS-SLD versus MDS NOS-MLD if no defining genetics present."
+  ],
+  "releaseNote": "This card summarizes the key points for distinguishing between ICC and WHO-5 MDS classifications on a board exam, including blast count, TP53 VAF, SF3B1 presence, and dysplastic lineage count."
+}
