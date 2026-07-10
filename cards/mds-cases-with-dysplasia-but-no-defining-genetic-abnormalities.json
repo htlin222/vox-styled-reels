@@ -1,0 +1,16 @@
+{
+  "id": "mds-cases-with-dysplasia-but-no-defining-genetic-abnormalities",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "How are MDS cases with dysplasia but no defining genetic abnormalities classified in ICC?",
+  "answer": "ICC classifies them as MDS NOS with single-lineage dysplasia or MDS NOS with multilineage dysplasia.",
+  "detail": [
+    "Single-lineage dysplasia means 10% or more dysplasia in only one hematopoietic lineage.",
+    "Multilineage dysplasia means 10% or more dysplasia in two or more hematopoietic lineages.",
+    "These categories apply when no defining genetic abnormalities like SF3B1, TP53, or del(5q) are present.",
+    "The NOS categories require meeting the standard 10% dysplasia threshold in ICC classification."
+  ],
+  "releaseNote": "MDS cases with dysplasia but no defining genetic abnormalities are classified as MDS NOS with single-lineage or multilineage dysplasia in ICC classification."
+}
