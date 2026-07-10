@@ -1,0 +1,16 @@
+{
+  "id": "who-5-classification-mds-ring-sideroblasts-no-sf3b1-mutation",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "How does WHO-5 classify MDS cases with ring sideroblasts but no SF3B1 mutation?",
+  "answer": "WHO-5 allows MDS-SF3B1 diagnosis with 15% or more ring sideroblasts even without SF3B1 mutation.",
+  "detail": [
+    "This represents a morphology-based pathway to the SF3B1 category in WHO-5 classification.",
+    "ICC does not allow this morphology-only pathway and requires the SF3B1 mutation itself.",
+    "Cases with ring sideroblasts but no SF3B1 mutation become MDS NOS in ICC classification.",
+    "The 15% ring sideroblast threshold is specific to WHO-5 for this diagnostic pathway."
+  ],
+  "releaseNote": "WHO-5 allows MDS-SF3B1 diagnosis with 15% or more ring sideroblasts even without SF3B1 mutation, whereas ICC requires the mutation itself."
+}
