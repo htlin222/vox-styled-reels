@@ -8,3 +8,4 @@ card-hyponatremia-classification
 card-urine-sodium-level-hypovolemic-hyponatremia
 card-extravascular-hemolysis-from-c3-fragment-deposition
 card-mechanical-mitral-valve-inr-target
+card-c3d-positivity-on-pnh
