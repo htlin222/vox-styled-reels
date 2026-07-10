@@ -1,0 +1,16 @@
+{
+  "id": "mds-with-biallelic-tp53-in-who-5",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "What defines MDS with biallelic TP53 inactivation in the WHO-5 classification system?",
+  "answer": "WHO-5 requires two TP53 mutations or one mutation plus TP53 copy loss or copy-neutral LOH.",
+  "detail": [
+    "WHO-5 does not specify a minimum variant allele frequency threshold for TP53 mutations in MDS-biTP53.",
+    "The patient must still meet basic MDS diagnostic criteria including presence of dysplasia for WHO-5 classification.",
+    "MDS-biTP53 applies to cases with 0-19% blasts; at 20% blasts it becomes AML without TP53 designation.",
+    "Biallelic TP53 occurs in 66-78% of all TP53-mutated MDS cases and predicts poor prognosis."
+  ],
+  "releaseNote": "WHO-5 classification system requires two TP53 mutations or one mutation plus TP53 copy loss or copy-neutral LOH for MDS with biallelic TP53 inactivation, with a minimum of 0-19% blasts and meeting basic MDS diagnostic criteria."
+}
