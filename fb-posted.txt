@@ -26,3 +26,4 @@ card-pnh-rbc-gating-strategy
 card-extravascular-hemolysis-vs-breakthrough-hemolysis-in-pnh
 card-breakthrough-hemolysis-vs-extravascular-hemolysis-on-complement-inhibitors
 card-al-amyloidosis-diagnosis-low-monoclonal-protein
+card-bone-scintigraphy-differentiation-attr-al-cardiac-amyloidosis
