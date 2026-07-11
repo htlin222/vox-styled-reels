@@ -24,3 +24,4 @@ card-nitric-oxide-depletion-and-thrombosis-in-pnh
 card-pnh-incidence-despite-x-linked-piga-mutations
 card-pnh-rbc-gating-strategy
 card-extravascular-hemolysis-vs-breakthrough-hemolysis-in-pnh
+card-breakthrough-hemolysis-vs-extravascular-hemolysis-on-complement-inhibitors
