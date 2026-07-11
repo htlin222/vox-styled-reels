@@ -17,3 +17,4 @@ card-breakthrough-hemolysis-with-c3-inhibitors
 card-factor-b-inhibitors-vs-c3-inhibitors-for-pnh
 card-danicopan-addition-to-c5-inhibitor-therapy-in-pnh
 card-narsoplimab-ineffective-pnh
+card-budd-chiari-syndrome-diagnosis-in-pnh
