@@ -40,3 +40,4 @@ card-tp53-mutation-clinical-importance
 card-mds-sf3b1-exclusion-criteria
 card-mds-sf3b1-diagnostic-criteria
 card-low-blast-mds-sf3b1-threshold
+card-mds-with-biallelic-tp53-in-who-5
